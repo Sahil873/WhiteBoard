@@ -426,8 +426,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <main className="w-screen h-screen mx-auto">
-      <div className="z-10 grid grid-cols-10 w-[fit-content] absolute shadow-lg top-4 left-[50%] -translate-x-[50%]">
+    <>
+      <div className="z-[1] bg-white grid grid-cols-10 w-[fit-content] absolute shadow-lg top-4 left-[50%] -translate-x-[50%]">
         <span
           className={`appbar-options ${
             action === Options.SELECT ? "bg-gray-200" : ""
@@ -521,140 +521,141 @@ const App: React.FC = () => {
           <RiDownload2Fill size={"2rem"} />
         </span>
       </div>
+      <main className="w-screen h-screen mx-auto">
+        <Stage
+          ref={stageRef}
+          width={window.innerWidth}
+          height={window.innerHeight}
+          onPointerUp={onPointerUp}
+          onPointerMove={onPointerMove}
+          onPointerDown={onPointerDown}
+        >
+          <Layer id="layer">
+            <Rect
+              x={0}
+              y={0}
+              width={window.innerWidth}
+              height={window.innerHeight}
+              fill="#ffffff"
+              id="bg"
+              onClick={() => transformerRef.current?.nodes([])}
+              onDblClick={handleDblClick}
+            />
 
-      <Stage
-        ref={stageRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        onPointerUp={onPointerUp}
-        onPointerMove={onPointerMove}
-        onPointerDown={onPointerDown}
-      >
-        <Layer id="layer">
-          <Rect
-            x={0}
-            y={0}
-            width={window.innerWidth}
-            height={window.innerHeight}
-            fill="#ffffff"
-            id="bg"
-            onClick={() => transformerRef.current?.nodes([])}
-            onDblClick={handleDblClick}
-          />
+            {shapes.map((shape) => {
+              if (shape.type === "rectangle") {
+                const rect = shape as Rectangle;
+                return (
+                  <Rect
+                    key={shape.id}
+                    id={shape.id}
+                    x={rect.x}
+                    y={rect.y}
+                    stroke={rect.strokeColor}
+                    strokeWidth={2}
+                    fill={rect.fillColor}
+                    height={rect.height}
+                    width={rect.width}
+                    draggable={isDraggable}
+                    onClick={handleOnClick}
+                    onDblClick={handleDblClick}
+                    className="z-0"
+                    onDragEnd={(e) => handleDragEnd(e, shape.id)}
+                  />
+                );
+              } else if (shape.type === "circle") {
+                const circle = shape as Circle;
+                return (
+                  <Circle
+                    key={shape.id}
+                    id={shape.id}
+                    radius={circle.radius}
+                    x={circle.x}
+                    y={circle.y}
+                    stroke={circle.strokeColor}
+                    strokeWidth={2}
+                    fill={circle.fillColor}
+                    draggable={isDraggable}
+                    onClick={handleOnClick}
+                    onDblClick={handleDblClick}
+                    className="z-0"
+                    onDragEnd={(e) => handleDragEnd(e, shape.id)}
+                  />
+                );
+              } else if (shape.type === "arrow") {
+                const arrow = shape as Arrow;
+                return (
+                  <Arrow
+                    key={shape.id}
+                    id={shape.id}
+                    points={arrow.points}
+                    stroke={arrow.strokeColor}
+                    strokeWidth={2}
+                    fill={arrow.fillColor}
+                    draggable={isDraggable}
+                    onClick={handleOnClick}
+                    className="z-0"
+                    onDragEnd={(e) => handleDragEnd(e, shape.id)}
+                  />
+                );
+              } else if (shape.type === "scribble") {
+                const scribble = shape as Scribble;
+                return (
+                  <Line
+                    key={shape.id}
+                    id={shape.id}
+                    lineCap="round"
+                    lineJoin="round"
+                    points={scribble.points}
+                    stroke={scribble.strokeColor}
+                    strokeWidth={2}
+                    fill={scribble.fillColor}
+                    draggable={isDraggable}
+                    onClick={handleOnClick}
+                    className="z-0"
+                    onDragEnd={(e) => handleDragEnd(e, shape.id)}
+                  />
+                );
+              } else if (shape.type === "text") {
+                const text = shape as Text;
+                return (
+                  <Text
+                    key={shape.id}
+                    id={shape.id}
+                    x={text.x}
+                    y={text.y}
+                    fontSize={text.fontSize}
+                    text={text.text}
+                    draggable={isDraggable}
+                    onClick={handleOnClick}
+                    className="z-0"
+                    onDragEnd={(e) => handleDragEnd(e, shape.id)}
+                    onDblClick={handleTextDblClick}
+                  />
+                );
+              } else if (shape.type === "image") {
+                const image = shape as Image;
+                return (
+                  <KonvaImage
+                    key={shape.id}
+                    id={shape.id}
+                    image={image.image}
+                    x={200}
+                    y={200}
+                    draggable={isDraggable}
+                    onClick={handleOnClick}
+                    className="z-0"
+                    onDragEnd={(e) => handleDragEnd(e, shape.id)}
+                  />
+                );
+              }
+            })}
 
-          {shapes.map((shape) => {
-            if (shape.type === "rectangle") {
-              const rect = shape as Rectangle;
-              return (
-                <Rect
-                  key={shape.id}
-                  id={shape.id}
-                  x={rect.x}
-                  y={rect.y}
-                  stroke={rect.strokeColor}
-                  strokeWidth={2}
-                  fill={rect.fillColor}
-                  height={rect.height}
-                  width={rect.width}
-                  draggable={isDraggable}
-                  onClick={handleOnClick}
-                  onDblClick={handleDblClick}
-                  className="z-0"
-                  onDragEnd={(e) => handleDragEnd(e, shape.id)}
-                />
-              );
-            } else if (shape.type === "circle") {
-              const circle = shape as Circle;
-              return (
-                <Circle
-                  key={shape.id}
-                  id={shape.id}
-                  radius={circle.radius}
-                  x={circle.x}
-                  y={circle.y}
-                  stroke={circle.strokeColor}
-                  strokeWidth={2}
-                  fill={circle.fillColor}
-                  draggable={isDraggable}
-                  onClick={handleOnClick}
-                  onDblClick={handleDblClick}
-                  className="z-0"
-                  onDragEnd={(e) => handleDragEnd(e, shape.id)}
-                />
-              );
-            } else if (shape.type === "arrow") {
-              const arrow = shape as Arrow;
-              return (
-                <Arrow
-                  key={shape.id}
-                  id={shape.id}
-                  points={arrow.points}
-                  stroke={arrow.strokeColor}
-                  strokeWidth={2}
-                  fill={arrow.fillColor}
-                  draggable={isDraggable}
-                  onClick={handleOnClick}
-                  className="z-0"
-                  onDragEnd={(e) => handleDragEnd(e, shape.id)}
-                />
-              );
-            } else if (shape.type === "scribble") {
-              const scribble = shape as Scribble;
-              return (
-                <Line
-                  key={shape.id}
-                  id={shape.id}
-                  lineCap="round"
-                  lineJoin="round"
-                  points={scribble.points}
-                  stroke={scribble.strokeColor}
-                  strokeWidth={2}
-                  fill={scribble.fillColor}
-                  draggable={isDraggable}
-                  onClick={handleOnClick}
-                  className="z-0"
-                  onDragEnd={(e) => handleDragEnd(e, shape.id)}
-                />
-              );
-            } else if (shape.type === "text") {
-              const text = shape as Text;
-              return (
-                <Text
-                  key={shape.id}
-                  id={shape.id}
-                  x={text.x}
-                  y={text.y}
-                  fontSize={text.fontSize}
-                  text={text.text}
-                  draggable={isDraggable}
-                  onClick={handleOnClick}
-                  className="z-0"
-                  onDragEnd={(e) => handleDragEnd(e, shape.id)}
-                  onDblClick={handleTextDblClick}
-                />
-              );
-            } else if (shape.type === "image") {
-              const image = shape as Image;
-              return (
-                <KonvaImage
-                  key={shape.id}
-                  id={shape.id}
-                  image={image.image}
-                  x={200}
-                  y={200}
-                  draggable={isDraggable}
-                  onClick={handleOnClick}
-                  className="z-0"
-                  onDragEnd={(e) => handleDragEnd(e, shape.id)}
-                />
-              );
-            }
-          })}
-
-          <Transformer ref={transformerRef} />
-        </Layer>
-      </Stage>
-    </main>
+            <Transformer ref={transformerRef} />
+          </Layer>
+        </Stage>
+      </main>
+    </>
   );
 };
 
