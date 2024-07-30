@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.appbar-options {
+  @apply h-12 aspect-square mx-auto cursor-pointer grid place-items-center hover:bg-gray-200;
+  transition: all;
+  transition-duration: 0.5s;
+}
