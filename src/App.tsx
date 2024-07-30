@@ -87,7 +87,6 @@ const App: React.FC = () => {
   const [colorOption, setColorOption] = useState<string>();
 
   const importImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Import image invokded");
     if (e.target.files?.[0]) {
       const imageUrl = URL.createObjectURL(e.target.files?.[0]);
       const image = new Image();
@@ -303,7 +302,6 @@ const App: React.FC = () => {
   };
 
   const handleExport = () => {
-    console.log("Handle Export Invoked");
     if (stageRef.current) {
       const uri = stageRef.current.toDataURL();
       const link = document.createElement("a");
@@ -379,7 +377,6 @@ const App: React.FC = () => {
       transformerRef.current.nodes([]);
     }
     const textNode = e.target;
-    console.log(textNode);
 
     const textPosition = e.target.getAbsolutePosition();
     const text = e.target.getAttr("text");
